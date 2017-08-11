@@ -183,7 +183,7 @@ public class AutoUpdateService extends Service {
     //获取未处理电影订单
     private void getUnHandleMovieOrderList() {
         try {
-            HttpUtil.sendOkHttpRequest("http://192.168.0.238:8080/bar/media/getMediaNewOrder.do", new Callback() {
+            HttpUtil.sendOkHttpRequest(application.getServiceIP() + "/bar/media/getMediaNewOrder.do", new Callback() {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String json = response.body().string();

@@ -439,7 +439,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             urlOrderDetail = application.getServiceIP() + URL.OrderItem + "?" + URL.NUMBER + "=" + seqnumber;
         }else {
             orderType = "Movie";
-            urlOrderDetail = "http://192.168.0.238:8080/bar/media/getMediaOrderItem.do?ordersId=" + seqnumber;
+            urlOrderDetail = application.getServiceIP() + "/bar/media/getMediaOrderItem.do?ordersId=" + seqnumber;
         }
         try {
             HttpUtil.sendOkHttpRequest(urlOrderDetail, new Callback() {
@@ -510,7 +510,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //获取未处理电影订单列表
     private void getUnHandleMoviesOrderList() {
         try {
-            HttpUtil.sendOkHttpRequest("http://192.168.0.238:8080/bar/media/getMediaNewOrder.do", new Callback() {
+            HttpUtil.sendOkHttpRequest(application.getServiceIP() + "/bar/media/getMediaNewOrder.do", new Callback() {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
@@ -627,7 +627,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // 已处理电影订单列表
     private void getHandleMoviesOrderList() {
         try {
-            HttpUtil.sendOkHttpRequest("http://192.168.0.238:8080/bar/media/getMediaOldOrder.do", new Callback() {
+            HttpUtil.sendOkHttpRequest(application.getServiceIP() + "/bar/media/getMediaOldOrder.do", new Callback() {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
@@ -720,7 +720,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if("Shoping".equals(orderType)) {
             markUrk = application.getServiceIP() + URL.OrderMark + "?" + URL.OrderMarkID + "=" + seqnumber + "&" + URL.OrderMarkFLAG;
         }else if("Movie".equals(orderType)){
-            markUrk = "http://192.168.0.238:8080/bar/media/getMediaOldOrderStaus.do?ordersId=" + seqnumber;
+            markUrk = application.getServiceIP() + "/bar/media/getMediaOldOrderStaus.do?ordersId=" + seqnumber;
         }else {
             markUrk = null;
         }
