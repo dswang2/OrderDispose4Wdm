@@ -22,15 +22,15 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailHolder> {
     private final Context context;
     private List<OrderDetail.OrderDetailBean> datas;
 
-    
-    public DetailAdapter(Context context,List<OrderDetail.OrderDetailBean> datas) {
+
+    public DetailAdapter(Context context, List<OrderDetail.OrderDetailBean> datas) {
         this.context = context;
         this.datas = datas;
     }
 
     @Override
     public DetailHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(context).inflate(R.layout.detail_item,parent,false);
+        View v = LayoutInflater.from(context).inflate(R.layout.detail_item, parent, false);
         return new DetailHolder(v);
     }
 
@@ -38,15 +38,19 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailHolder> {
     public void onBindViewHolder(DetailHolder holder, int position) {
         OrderDetail.OrderDetailBean orderDetailBean = datas.get(position);
         holder.detail_item_tv_name.setText(orderDetailBean.getGoodsName());
-        holder.detail_item_tv_price.setText(""+orderDetailBean.getPrice());
-        holder.detail_item_tv_count.setText(""+orderDetailBean.getBuynum());
+        holder.detail_item_tv_price.setText("" + orderDetailBean.getPrice());
+        if (orderDetailBean.getBuynum() != null) {
+            holder.detail_item_tv_count.setText("" + orderDetailBean.getBuynum());
+        }else {
+            holder.detail_item_tv_count.setText("1");
+        }
     }
 
     @Override
     public int getItemCount() {
-        if(datas==null || datas.isEmpty()){
+        if (datas == null || datas.isEmpty()) {
             return 0;
-        }else {
+        } else {
             return datas.size();
         }
     }
@@ -54,14 +58,15 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailHolder> {
 
 }
 
-class DetailHolder extends RecyclerView.ViewHolder{
+class DetailHolder extends RecyclerView.ViewHolder {
     public TextView detail_item_tv_name;
     public TextView detail_item_tv_price;
     public TextView detail_item_tv_count;
+
     public DetailHolder(View itemView) {
         super(itemView);
-        detail_item_tv_name= (TextView) itemView.findViewById(R.id.detail_item_tv_name);
-        detail_item_tv_price= (TextView) itemView.findViewById(R.id.detail_item_tv_price);
-        detail_item_tv_count= (TextView) itemView.findViewById(R.id.detail_item_tv_count);
+        detail_item_tv_name = (TextView) itemView.findViewById(R.id.detail_item_tv_name);
+        detail_item_tv_price = (TextView) itemView.findViewById(R.id.detail_item_tv_price);
+        detail_item_tv_count = (TextView) itemView.findViewById(R.id.detail_item_tv_count);
     }
 }

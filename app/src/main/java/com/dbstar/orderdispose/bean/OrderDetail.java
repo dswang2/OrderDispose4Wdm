@@ -1,6 +1,7 @@
 package com.dbstar.orderdispose.bean;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -37,7 +38,11 @@ public class OrderDetail {
     public int getTotalCount() {
         int count = 0;
         for (OrderDetailBean bean : data) {
-            if (bean.getBuynum().matches("[0-9]+")) {
+            if (bean.getBuynum() == null) {
+                count = 1;
+                break;
+            }
+            if (bean.getBuynum()!=null && bean.getBuynum().matches("[0-9]+")) {
                 count += Integer.valueOf(bean.getBuynum());
             }
         }
@@ -47,14 +52,14 @@ public class OrderDetail {
     public int getTotalMoney() {
         int money = 0;
         for (OrderDetailBean bean : data) {
-            if (bean.getMoney().matches("[0-9]+") && bean.getBuynum().matches("[0-9]+")) {
+            if (bean.getMoney()!=null && bean.getMoney().matches("[0-9]+")) {
                 money += Integer.valueOf(bean.getMoney());
             }
         }
         return money;
     }
 
-    public String getOrderType(){
+    public String getOrderType() {
         String flag = null;
         for (OrderDetailBean bean : data) {
             //取订详情列表 第一个物品 所标识的 订单类型 作为整个订单的类型
@@ -101,6 +106,7 @@ public class OrderDetail {
 
         private String buynum;
         private String money;
+        @SerializedName(value = "goodsName", alternate = {"itemName"})
         private String goodsName;
         private String flag;
 
@@ -114,6 +120,9 @@ public class OrderDetail {
         }
 
         public String getBuynum() {
+            if (this.buynum == null) {
+                this.buynum = "1";
+            }
             return buynum;
         }
 
@@ -137,14 +146,17 @@ public class OrderDetail {
             this.goodsName = goodsName;
         }
 
-        public int getPrice(){
+        public int getPrice() {
             int price = 0;
             int m = 0, c = 1;
-            if (getMoney().matches("[0-9]+") && getBuynum().matches("[0-9]+")) {
+            if (getBuynum() == null) {
+                return Integer.valueOf(getMoney());
+            }
+            if (getMoney()!=null && getMoney().matches("[0-9]+") && getBuynum().matches("[0-9]+")) {
                 m += Integer.valueOf(getMoney());
                 c = Integer.valueOf(getBuynum());
-                if(c>0){
-                    price += m/c;
+                if (c > 0) {
+                    price += m / c;
                 }
             }
             return price;

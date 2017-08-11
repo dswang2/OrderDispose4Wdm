@@ -12,15 +12,8 @@ import android.widget.TextView;
 import com.dbstar.orderdispose.MainActivity;
 import com.dbstar.orderdispose.R;
 import com.dbstar.orderdispose.bean.Order;
-import com.dbstar.orderdispose.constant.URL;
-import com.dbstar.orderdispose.utils.HttpUtil;
 
-import java.io.IOException;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 /**
  * Created by dswang on 2016/12/25.
@@ -65,8 +58,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderHolder>{
     public void onBindViewHolder(final OrderHolder holder, int position) {
         final Order.OrderBean order = datas.get(position);
         holder.rvitem_tv_number.setText(order.getNumber());
-        holder.rvitem_tv_createdate.setText(order.getCreatedate());
-        holder.rvitem_tv_ordersNum.setText(order.getOrdersNum());
+        if("0".equals(order.getStatus())){
+            holder.rvitem_tv_createdate.setText("类型：点餐/购物");
+        }else if("2".equals(order.getStatus())){
+            holder.rvitem_tv_createdate.setText("类型：酒店送物：");
+        }else{
+            holder.rvitem_tv_createdate.setText("类型：电影点播");
+        }
+
+        holder.rvitem_tv_ordersNum.setText(order.getCreatedate());
         holder.rvitem_tv_roomId.setText(order.getRoomId());
         holder.rvitem_tv_totalmoney.setText(order.getTotalmoney());
         //在用户没有点击任何 item 之前，所有item 均不设置背景颜色
@@ -97,6 +97,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderHolder>{
                 detail.putString("orderTime",order.getCreatedate());
                 detail.putString("orderRoomId",order.getRoomId());
                 detail.putString("orderNumber",order.getNumber());
+                detail.putString("orderStatus",order.getStatus());
                 msg.setData(detail);
                 msg.what = 3;
                 mainActivity.getHandler().sendMessage(msg);

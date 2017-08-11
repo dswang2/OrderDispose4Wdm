@@ -1,6 +1,7 @@
 package com.dbstar.orderdispose.bean;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -69,11 +70,14 @@ public class Order {
          * ordersNum : 5
          * mark : 已处理
          */
-
+        @SerializedName(value = "number", alternate = {"id"})
         private String number;
+        @SerializedName(value = "totalmoney", alternate = {"money"})
         private String totalmoney;
         private String createdate;
+        @SerializedName(value = "roomId", alternate = {"roomNumber"})
         private String roomId;
+        private String status;
         private String ordersNum;
         private String mark;
 
@@ -123,6 +127,14 @@ public class Order {
 
         public void setMark(String mark) {
             this.mark = mark;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
         }
     }
 

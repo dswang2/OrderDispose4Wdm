@@ -24,6 +24,8 @@ import com.dbstar.orderdispose.utils.HttpUtil;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,6 +42,7 @@ public class AutoUpdateService extends Service {
     private MediaPlayer mediaPlayer;
     private AlarmManager manager;
     private PendingIntent pi;
+    private List<Order.OrderBean> datas = new ArrayList<Order.OrderBean>();
 
     @Override
     public void onCreate() {
@@ -139,13 +142,18 @@ public class AutoUpdateService extends Service {
                 onMessageListener.onUpdate(Constant.MSG_NET_OK);
             }
         }
+        getUnHandleOrderList();
+    }
+
+
+    private void getUnHandleOrderList() {
         try {
             HttpUtil.sendOkHttpRequest(application.getServiceIP() + URL.NewOrder, new Callback() {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String json = response.body().string();
-
-                    Order order = null;
+                    datas.clear();
+                    Order order =  null;
                     //解析访问网络获取到的 json数据 ，打印出来
                     try {
                         order = new Gson().fromJson(json, Order.class);
@@ -154,12 +162,50 @@ public class AutoUpdateService extends Service {
                     }
                     Log.d(TAG, "onResponse: " + order);
 
-                    if(order == null){
-                        return;
+                    if (order != null) {
+                        datas.addAll(order.getData());
                     }
 
+                    getUnHandleMovieOrderList();
+
+                }
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //获取未处理电影订单
+    private void getUnHandleMovieOrderList() {
+        try {
+            HttpUtil.sendOkHttpRequest("http://192.168.0.238:8080/bar/media/getMediaNewOrder.do", new Callback() {
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String json = response.body().string();
+                    Order order =  null;
+                    //解析访问网络获取到的 json数据 ，打印出来
+                    try {
+                        order = new Gson().fromJson(json, Order.class);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    Log.d(TAG, "onResponse: " + order);
+
+                    if (order != null) {
+                        datas.addAll(order.getData());
+                    }
+
+
                     int preSize = application.getOrderListSize();
-                    int nextSize = order.getData().size();
+                    int nextSize = datas.size();
+
+
+
                     Log.d(TAG, "onResponse: preSize = " + preSize + " nextSize = " + nextSize);
                     // 新的订单列表 长度 大于原有的列表，视为有新消息
                     if (preSize < nextSize) {
