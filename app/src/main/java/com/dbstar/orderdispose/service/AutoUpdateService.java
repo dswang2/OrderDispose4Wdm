@@ -147,12 +147,15 @@ public class AutoUpdateService extends Service {
 
 
     private void getUnHandleOrderList() {
+
+        datas.clear();
+
         try {
             HttpUtil.sendOkHttpRequest(application.getServiceIP() + URL.NewOrder, new Callback() {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String json = response.body().string();
-                    datas.clear();
+
                     Order order =  null;
                     //解析访问网络获取到的 json数据 ，打印出来
                     try {
@@ -172,7 +175,7 @@ public class AutoUpdateService extends Service {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    getUnHandleMovieOrderList();
                 }
             });
         }catch (Exception e){

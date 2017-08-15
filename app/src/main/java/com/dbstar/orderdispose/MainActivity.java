@@ -587,6 +587,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //获取未处理点餐订单列表
     public void getUnHandleOrderList() {
 
+        datas.clear();
+
         try {
             HttpUtil.sendOkHttpRequest(application.getServiceIP() + URL.NewOrder, new Callback() {
 
@@ -606,7 +608,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                     // 通知主线程，刷新订单列表
-                    datas.clear();
                     if (order != null) {
                         datas.addAll(order.getData());
                     }
@@ -616,6 +617,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    // 获取未处理电影订单列表
+                    getUnHandleMoviesOrderList();
                 }
             });
         } catch (Exception e) {
@@ -674,6 +677,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //获取 历史订单列表
     public void getHistoryOrderList() {
+        datas.clear();
         try {
             HttpUtil.sendOkHttpRequest(application.getServiceIP() + URL.OldOrder, new Callback() {
 
@@ -690,8 +694,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     Log.d(TAG, "未处理订单: " + order);
 
-                    //通知主线程，刷新订单列表
-                    datas.clear();
                     if (order != null) {
                         datas.addAll(order.getData());
                     }
@@ -701,7 +703,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    getHandleMoviesOrderList();
                 }
             });
         } catch (Exception e) {
